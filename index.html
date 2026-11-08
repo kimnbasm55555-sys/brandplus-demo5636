@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>카톡 견적·작업보고 시스템 체험</title>
-<meta name="description" content="손님은 앱 설치 없이 카톡 카드만 누르고, 업체는 견적부터 작업 보고까지 한 화면에서 처리합니다. QR 도착 인증, 사진 콕 집기 재작업, 월간 리포트까지 9단계를 직접 눌러 보세요.">
+<meta name="description" content="손님은 앱 설치 없이 카톡 카드만 누르고, 업체는 견적부터 작업 보고까지 한 화면에서 처리합니다. QR 도착 인증, 계약서 자동 작성, 사진 콕 집기 재작업, 월간 리포트까지 9단계를 직접 눌러 보세요.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="브랜드플러스">
 <meta property="og:title" content="카톡 견적·작업보고 시스템 체험">
-<meta property="og:description" content="손님은 앱 설치 없이 카드만 누릅니다. 견적부터 작업 보고까지 QR 도착 인증, 사진 콕 집기 재작업, 월간 리포트까지 9단계를 직접 눌러 보세요.">
+<meta property="og:description" content="손님은 앱 설치 없이 카드만 누릅니다. 견적부터 작업 보고까지 QR 도착 인증, 계약서 자동 작성, 사진 콕 집기 재작업, 월간 리포트까지 9단계를 직접 눌러 보세요.">
 <meta property="og:url" content="https://brandplus-demo5636.vercel.app/">
 <meta property="og:image" content="https://brandplus-demo5636.vercel.app/og-image.jpg">
 <meta property="og:image:width" content="1200">
@@ -154,6 +154,25 @@ footer.bottom{border-top:1px solid #d9dee2;padding:24px 0;font-size:14px;color:#
 .score.warn{background:#d9480f}
 .score.mid{background:#b5530b}
 .site small{display:block;color:#52616d;font-size:12px}
+
+.pnav{width:372px;max-width:100%;display:flex;gap:8px;align-items:center;border:2px solid #15212b;padding:8px;background:#fff}
+.pnav .btn{min-height:46px;padding:0 16px}
+.pnav .btn:disabled{opacity:.35}
+.mstep{flex:1;min-width:0;text-align:center;font-size:13px;line-height:1.3}
+.mstep b{display:block;font-size:15px}
+.mstep span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#3b4a56}
+.phone{height:640px}
+@media (max-width:860px){
+ .stage{gap:16px}
+ .side{order:-1}
+ .steps{display:none}
+ .panel{padding:14px 16px}
+ .panel h2{font-size:19px}
+ .panel p,.panel .saved{display:none}
+ .panel .task{margin:6px 0 0}
+ .phone{height:560px}
+ .pnav{position:sticky;bottom:8px;z-index:5}
+}
 </style>
 </head>
 <body>
@@ -172,6 +191,7 @@ footer.bottom{border-top:1px solid #d9dee2;padding:24px 0;font-size:14px;color:#
 <div class="phoneCol">
 <div id="who" class="who">고객사 담당자 휴대폰 · 카톡</div>
 <div class="phone"><div class="screen" id="screen"></div></div>
+<div id="pnav" class="pnav"></div>
 <p class="note">휴대폰 화면 안에서 위아래로 스크롤할 수 있습니다.</p>
 </div>
 <div class="side">
@@ -216,11 +236,11 @@ var STEPS=[
   body:'손님이 고른 구역이 그대로 견적 항목으로 들어옵니다. 항목을 켜고 끄면 월 금액이 자동으로 계산됩니다.',
   task:'항목을 눌러 금액을 바꿔 보고 [카톡으로 견적서 보내기]를 눌러 보세요.',
   saved:'견적서가 고객사 기록에 붙고 문의 상태가 <b>견적 발송</b>으로 바뀝니다.'},
- {who:'cust',short:'고객사가 계약 확정',tag:'3단계 · 고객사 담당자',
-  title:'담당자는 카톡에서 견적서를 열고 계약을 확정합니다.',
-  body:'금액 내역, 포함·불포함 항목, 방문 일정이 한 화면에 나옵니다. 계약을 확정하면 매주 방문 일정이 자동으로 잡힙니다.',
-  task:'반짝이는 [견적서] 카드를 눌러 [이 조건으로 계약 확정]을 눌러 보세요.',
-  saved:'<b>일정 달력</b>에 매주 토요일 방문이 등록되고 담당 팀이 배정됩니다.'},
+ {who:'cust',short:'계약 확정 + 계약서 자동 작성',tag:'3단계 · 고객사 담당자',diff:true,
+  title:'계약을 확정하면 계약서가 자동으로 만들어지고, 카톡에서 바로 서명합니다.',
+  body:'견적서의 장소, 방문 일정, 월 금액, 결제 방법이 그대로 계약서에 들어갑니다. 담당자는 계약서 카드를 열어 손가락으로 서명하면 끝나고, 서명된 계약서는 양쪽에 보관됩니다.',
+  task:'반짝이는 [견적서] 카드에서 [이 조건으로 계약 확정]을 누르고, 이어서 도착한 [계약서] 카드를 열어 서명해 보세요.',
+  saved:'서명된 <b>계약서</b>가 고객사 기록에 보관되고, 매주 토요일 방문이 일정에 등록됩니다.'},
  {who:'staff',short:'직원 QR 도착 인증',tag:'4단계 · 직원 현장 화면',diff:true,
   title:'직원이 현장에 붙은 QR을 찍으면 도착 시각이 고객사 카톡에 바로 갑니다.',
   body:'정기청소에서 가장 많은 불만은 "진짜 왔다 갔는지 모르겠다"입니다. 건물 입구에 붙인 QR을 찍어야만 도착으로 기록되고, 휴대폰 위치가 건물 주소와 맞는지도 함께 확인합니다.',
@@ -269,12 +289,13 @@ function activePrice(){return PRICE.filter(function(p){return p.id==='floor'||S.
 function sumTotal(){return activePrice().reduce(function(a,p){return a+(S.items[p.id]?p.price:0);},0);}
 function rangeOf(){var base=activePrice().reduce(function(a,p){return a+p.price;},0);var k=CYCLE[S.form.cycle][1];var floor=720000*(k-1);var t=base+floor;return [Math.floor(t*0.9/50000)*50000,Math.ceil(t*1.15/50000)*50000];}
 function pill(on,txt,fn,soft){return '<button class="pill'+(soft?' soft':'')+(on?' on':'')+'" aria-pressed="'+(on?'true':'false')+'" onclick="'+fn+'">'+txt+'</button>';}
-function live(c){var m={quote:0,estimate:2,report:5,monthly:7};return (m[c]===S.step&&!S.done[S.step])?' live':'';}
+function live(c){var m={quote:0,estimate:2,contract:2,report:5,monthly:7};if(c==='estimate'&&S.confirmed)return '';if(c==='contract'&&S.signed)return '';return (m[c]===S.step&&!S.done[S.step])?' live':'';}
 
 function cardHTML(m){
  var c=m.card,l=live(c);
  if(c==='quote')return '<button class="card'+l+'" onclick="openCard(\'quote\')"><div class="img"><img src="'+IMG.worker+'" alt="창문을 닦는 청소 직원"><div class="ov"><div style="font-size:11px;color:#c9e0f2">부산기업청소</div><div style="font-size:17px;font-weight:700">견적 요청서</div></div></div><div class="body"><b>건물 정보를 보내 주세요.</b><div style="color:#52616d;font-size:12px">구역·방문 주기를 고르면 예상 금액이 바로 나옵니다.</div><div class="dom">부산기업청소.kr</div></div></button>';
  if(c==='estimate')return '<button class="card'+l+'" onclick="openCard(\'estimate\')"><div class="body" style="border-bottom:1px solid #e3e8ec"><div style="font-size:11px;color:#52616d">부산기업청소 · 견적서</div><div style="font-size:20px;font-weight:700">월 '+fmt(m.amount)+'원</div><div style="font-size:12px;color:#52616d">해운대구 [빌딩명] 정기청소 · 매주 토요일</div></div><div class="body" style="display:flex;justify-content:space-between"><span class="dom" style="margin:0">부산기업청소.kr</span><b style="color:#0a5b9c">견적서 보기</b></div></button>';
+ if(c==='contract')return '<button class="card'+l+'" onclick="openCard(\'contract\')"><div class="body" style="border-bottom:1px solid #e3e8ec"><div style="font-size:11px;color:#52616d">부산기업청소 · 전자 계약서</div><div style="font-size:17px;font-weight:700">정기청소 용역 계약서</div><div style="font-size:12px;color:#52616d">견적서 내용으로 자동 작성 · 서명 '+(S.signed?'완료':'대기')+'</div></div><div class="body" style="display:flex;justify-content:space-between"><span class="dom" style="margin:0">부산기업청소.kr</span><b style="color:#0a5b9c">'+(S.signed?'계약서 보기':'서명하기')+'</b></div></button>';
  if(c==='report')return '<button class="card'+l+'" onclick="openCard(\'report\')"><div class="pair"><img src="'+IMG['parking-before']+'" alt="청소 전"><img src="'+IMG['parking-after']+'" alt="청소 후"></div><div class="body"><b>11월 1일 정기청소 보고서</b><div style="color:#52616d;font-size:12px">07:02 도착 · 12:10 퇴근 · 사진 10장</div><div class="dom">부산기업청소.kr</div></div></button>';
  if(c==='monthly')return '<button class="card'+l+'" onclick="openCard(\'monthly\')"><div class="body" style="background:#15212b;color:#fff"><div style="font-size:11px;color:#b9c6d0">부산기업청소 · 월간 위생 리포트</div><div style="font-size:18px;font-weight:700">11월 위생 리포트</div><div style="font-size:12px;color:#c9e0f2">방문 5회 · 정시 도착 100% · 재작업 1건 처리</div></div><div class="body"><span class="dom" style="margin:0">부산기업청소.kr</span></div></button>';
  return '';
@@ -318,8 +339,20 @@ function estimateView(){
  h+='<div class="kv"><div><span>장소</span><span>해운대구 [빌딩명]</span></div><div><span>방문 일정</span><span>매주 토요일 07:00</span></div><div><span>작업 인원</span><span>3명 · 회당 약 5시간</span></div></div>';
  h+='<div style="background:#f3f6f8;padding:12px">'+activePrice().filter(function(p){return S.items[p.id];}).map(function(p){return '<div style="display:flex;justify-content:space-between;gap:8px;padding:4px 0"><span>'+p.label+'</span><span>'+(p.price?fmt(p.price)+'원':'포함')+'</span></div>';}).join('')+'<div style="display:flex;justify-content:space-between;border-top:1px solid #c6cfd6;margin-top:6px;padding-top:8px;font-weight:700;font-size:17px"><span>월 합계</span><span>'+fmt(S.sent||sumTotal())+'원</span></div><div class="note" style="text-align:right">VAT 별도 · 매월 세금계산서 발행</div></div>';
  h+='<p style="margin:0;border:1px solid #c6cfd6;padding:10px 12px">매 방문마다 QR 도착·퇴근 기록과 사진 보고서를 보내 드립니다.</p>';
- if(!S.done[2])h+='<button class="big" onclick="confirmContract()">이 조건으로 계약 확정</button>';
- else h+='<div class="okbox"><b>정기청소 계약이 확정되었습니다.</b><div style="color:#3b4a56">11월 1일(토) 07:00 첫 방문입니다.</div></div>';
+ if(!S.confirmed)h+='<button class="big" onclick="confirmContract()">이 조건으로 계약 확정</button>';
+ else h+='<div class="okbox"><b>계약 확정을 받았습니다.</b><div style="color:#3b4a56">견적서 내용으로 계약서가 자동 작성되어 카톡으로 보내졌습니다.</div></div>';
+ return h+'</div>';
+}
+function contractView(){
+ var h='<div class="bar white"><button class="btn link" onclick="go(\'chat\')">‹ 채팅</button>계약서<small>자동 작성</small></div><div class="page">';
+ h+='<div><p class="note" style="margin:0">계약번호 BK-C-2610-027 · 견적서 BK-2610-027 기준</p><h3>정기청소 용역 계약서</h3></div>';
+ h+='<div class="kv"><div><span>발주자 (갑)</span><span>[회사명] · 담당 [이름]</span></div><div><span>수급자 (을)</span><span>부산기업청소 · 대표 [대표자명]</span></div><div><span>청소 장소</span><span>해운대구 [빌딩명]</span></div><div><span>계약 기간</span><span>2026.11.1 ~ 2027.10.31 (12개월)</span></div><div><span>방문 일정</span><span>매주 토요일 07:00</span></div><div><span>월 금액</span><span>'+fmt(S.sent||sumTotal())+'원 (VAT 별도)</span></div><div><span>결제</span><span>매월 말 세금계산서, 익월 10일 입금</span></div></div>';
+ h+='<div style="background:#f3f6f8;padding:10px 12px;font-size:13px;color:#3b4a56"><b style="color:#15212b">주요 조건</b><br>1. 매 방문 QR 도착·퇴근 기록과 사진 보고서를 제공합니다.<br>2. 재작업 요청은 접수 후 48시간 안에 처리합니다.<br>3. 한쪽이 해지하려면 1개월 전에 알립니다.<br>4. 작업 중 파손은 을의 영업배상책임보험으로 보상합니다.</div>';
+ h+='<p class="lbl" style="margin:0">갑 서명</p>';
+ if(!S.signed)h+='<button onclick="signContract()" style="height:110px;border:1px dashed #9aa8b3;background:#fff;font-size:14px;color:#52616d;font-family:inherit">여기를 눌러 손가락으로 서명하세요</button>';
+ else h+='<div style="height:110px;border:1px solid #9aa8b3;display:flex;flex-direction:column;align-items:center;justify-content:center"><svg width="170" height="50" viewBox="0 0 170 50" role="img" aria-label="서명"><path d="M8 34 C 20 6, 30 46, 44 22 S 70 8, 78 30 S 104 44, 118 18 S 150 20, 162 28" fill="none" stroke="#15212b" stroke-width="2.5" stroke-linecap="round"/></svg><span class="note">10월 28일 10:02 서명</span></div>';
+ if(S.signed&&!S.done[2])h+='<button class="big" onclick="finishContract()">서명하고 계약 완료</button>';
+ if(S.done[2])h+='<div class="okbox"><b>계약이 완료되었습니다.</b><div style="color:#3b4a56">서명된 계약서가 양쪽에 보관되었습니다. 11월 1일(토) 07:00 첫 방문입니다.</div></div>';
  return h+'</div>';
 }
 function arriveView(){
@@ -396,8 +429,8 @@ function hqView(){
  return h+'</div>';
 }
 
-var WHO={chat:['고객사 담당자 휴대폰 · 카톡',''],form:['고객사 담당자 · 카톡에서 열린 견적 요청서',''],admin:['사장님 휴대폰 · 관리 화면','boss'],estimate:['고객사 담당자 · 카톡에서 열린 견적서',''],arrive:['직원 휴대폰 · 현장 화면','staff'],work:['직원 휴대폰 · 현장 화면','staff'],report:['고객사 담당자 · 카톡에서 열린 완료 보고',''],rework:['직원 휴대폰 · 재작업 요청','staff'],monthly:['고객사 담당자 · 월간 위생 리포트',''],hq:['고객사 본사 · 여러 매장 통합 화면','hq']};
-var VIEWS={chat:chatView,form:formView,admin:adminView,estimate:estimateView,arrive:arriveView,work:workView,report:reportView,rework:reworkView,monthly:monthlyView,hq:hqView};
+var WHO={chat:['고객사 담당자 휴대폰 · 카톡',''],form:['고객사 담당자 · 카톡에서 열린 견적 요청서',''],admin:['사장님 휴대폰 · 관리 화면','boss'],estimate:['고객사 담당자 · 카톡에서 열린 견적서',''],contract:['고객사 담당자 · 카톡에서 열린 계약서',''],arrive:['직원 휴대폰 · 현장 화면','staff'],work:['직원 휴대폰 · 현장 화면','staff'],report:['고객사 담당자 · 카톡에서 열린 완료 보고',''],rework:['직원 휴대폰 · 재작업 요청','staff'],monthly:['고객사 담당자 · 월간 위생 리포트',''],hq:['고객사 본사 · 여러 매장 통합 화면','hq']};
+var VIEWS={chat:chatView,form:formView,admin:adminView,estimate:estimateView,contract:contractView,arrive:arriveView,work:workView,report:reportView,rework:reworkView,monthly:monthlyView,hq:hqView};
 
 function render(){
  var scr=document.getElementById('screen');scr.innerHTML=VIEWS[S.view]();
@@ -409,19 +442,19 @@ function render(){
  h+='<div class="task'+(S.done[S.step]?' ok':'')+'">'+(S.done[S.step]?(last?'체험이 끝났습니다. 아래는 이 고객사 한 곳의 기록입니다.':'완료했습니다. [다음 단계]를 눌러 주세요.'):s.task)+'</div>';
  if(s.saved)h+='<div class="saved">이때 저장되는 것: '+s.saved+'</div>';
  if(last&&S.done[S.step]){
-  h+='<ul class="timeline" style="margin-top:14px"><li>10/27 · 견적 요청서 회신<span>예상 범위를 보고 문의, 사진 3장</span></li><li>10/27 · 견적서 발송<span>월 '+fmt(S.sent||sumTotal())+'원</span></li><li>10/28 · 계약 확정<span>매주 토요일 07:00, A팀</span></li><li>11/1 · QR 도착 07:02 · 퇴근 12:10<span>사진 10장, 체크리스트 6개</span></li><li>11/1 · 재작업 요청 (사진 위치 표시)<span>11/2 처리 완료, 21시간</span></li><li>11/30 · 11월 위생 리포트<span>방문 5회, 정시 도착 100%</span></li></ul>';
+  h+='<ul class="timeline" style="margin-top:14px"><li>10/27 · 견적 요청서 회신<span>예상 범위를 보고 문의, 사진 3장</span></li><li>10/27 · 견적서 발송<span>월 '+fmt(S.sent||sumTotal())+'원</span></li><li>10/28 · 계약 확정 · 계약서 자동 작성·전자 서명<span>12개월, 매주 토요일 07:00, A팀</span></li><li>11/1 · QR 도착 07:02 · 퇴근 12:10<span>사진 10장, 체크리스트 6개</span></li><li>11/1 · 재작업 요청 (사진 위치 표시)<span>11/2 처리 완료, 21시간</span></li><li>11/30 · 11월 위생 리포트<span>방문 5회, 정시 도착 100%</span></li></ul>';
  }
- h+='<div class="nav">'+(S.step>0?'<button class="btn" onclick="prev()">이전 단계</button>':'');
- if(last)h+=(S.done[S.step]?'<button class="btn pri" onclick="restart()">처음부터 다시 체험</button>':'<button class="btn link" onclick="skip()">이 단계 자동으로 진행</button>');
- else h+='<button class="btn pri" '+(S.done[S.step]?'':'disabled')+' onclick="next()">다음 단계</button>'+(S.done[S.step]?'':'<button class="btn link" onclick="skip()">이 단계 자동으로 진행</button>');
- h+='</div>';
+ if(!S.done[S.step]&&!last)h+='<p class="note" style="margin:10px 0 0">휴대폰 화면에서 직접 해 보셔도 되고, 휴대폰 바로 아래 [다음]을 누르면 자동으로 진행됩니다.</p>';
  document.getElementById('panel').innerHTML=h;
+ var pn=document.getElementById('pnav');
+ pn.innerHTML='<button class="btn" '+(S.step>0?'':'disabled')+' onclick="prev()">이전</button><div class="mstep"><b>'+(S.step+1)+' / '+STEPS.length+'</b><span>'+s.short+'</span></div>'+(last&&S.done[S.step]?'<button class="btn pri" onclick="restart()">다시 체험</button>':'<button class="btn pri" onclick="'+(last?'skip()':'next()')+'">'+(last?'결과 보기':'다음')+'</button>');
 }
 
 function go(v){S.view=v;render();}
 function openCard(c){
  if(c==='quote'){if(S.done[0])return;S.view='form';}
  else if(c==='estimate')S.view='estimate';
+ else if(c==='contract')S.view='contract';
  else if(c==='report')S.view='report';
  else if(c==='monthly')S.view='monthly';
  render();document.getElementById('screen').scrollTop=0;
@@ -431,7 +464,9 @@ function setCycle(c){S.form.cycle=c;render();}
 function submitForm(){S.msgs.push({t:'me',text:'건물 정보랑 주차장·복도·창문 사진 보냈습니다.'});S.msgs.push({t:'sys',text:'사장님 휴대폰으로 새 문의 알림 문자가 발송되었습니다.'});S.done[0]=true;S.view='chat';render();}
 function toggleItem(id){S.items[id]=!S.items[id];render();}
 function sendEstimate(){if(S.done[1])return;S.sent=sumTotal();S.msgs.push({t:'biz',text:'보내 주신 사진 확인했습니다. 견적서를 보내 드립니다.'});S.msgs.push({t:'card',card:'estimate',amount:S.sent});S.done[1]=true;S.view='chat';render();}
-function confirmContract(){if(S.done[2])return;S.done[2]=true;S.msgs.push({t:'sys',text:'계약 확정 · 매주 토요일 07:00 방문이 일정에 등록되었습니다.'});render();}
+function confirmContract(){if(S.confirmed)return;S.confirmed=true;S.msgs.push({t:'me',text:'견적서 조건으로 진행하겠습니다.'});S.msgs.push({t:'biz',text:'감사합니다. 견적서 내용으로 계약서를 작성했습니다. 확인 후 서명해 주세요.'});S.msgs.push({t:'card',card:'contract'});S.view='chat';render();}
+function signContract(){S.signed=true;render();}
+function finishContract(){if(S.done[2])return;S.done[2]=true;S.msgs.push({t:'sys',text:'계약서 서명 완료 · 양쪽에 보관 · 매주 토요일 07:00 방문이 일정에 등록되었습니다.'});render();}
 function arrive(){if(S.arrived)return;S.arrived=true;S.done[3]=true;S.msgs.push({t:'date',text:'11월 1일 토요일'});S.msgs.push({t:'biz',text:'[도착 알림] 담당 A팀이 07:02에 도착했습니다. (QR·위치 인증)'});render();}
 function addPhoto(k){S.photos[k]=!S.photos[k];render();}
 function toggleCheck(i){S.checks[i]=!S.checks[i];render();}
@@ -448,12 +483,14 @@ function enterStep(){
  if(S.step===7&&!S.msgs.some(function(m){return m.card==='monthly';})){S.msgs.push({t:'date',text:'11월 30일 일요일'});S.msgs.push({t:'biz',text:'11월 한 달 청소 기록을 리포트로 정리해 보내 드립니다.'});S.msgs.push({t:'card',card:'monthly'});}
  S.view=STEP_VIEW[S.step];render();
  var scr=document.getElementById('screen');scr.scrollTop=S.view==='chat'?scr.scrollHeight:0;
+ toPhone();
 }
-function next(){if(S.step<STEPS.length-1){S.step++;enterStep();}}
+function next(){if(!S.done[S.step])skip();if(S.step<STEPS.length-1){S.step++;enterStep();}}
 function prev(){if(S.step>0){S.step--;enterStep();}}
+function toPhone(){if(window.innerWidth<=860){var p=document.querySelector('.stage');if(p&&p.scrollIntoView)p.scrollIntoView({behavior:'smooth',block:'start'});}}
 function skip(){
  var i=S.step;
- if(i===0)submitForm();else if(i===1)sendEstimate();else if(i===2)confirmContract();else if(i===3){S.view='arrive';arrive();}
+ if(i===0)submitForm();else if(i===1)sendEstimate();else if(i===2){confirmContract();signContract();finishContract();}else if(i===3){S.view='arrive';arrive();}
  else if(i===4){fillAll();sendReport();}
  else if(i===5){if(!S.pin)S.pin={zone:'parking',x:62,y:70};S.view='report';S.zone=S.pin.zone;sendPin();}
  else if(i===6)rework();else if(i===7){S.view='monthly';ackMonthly();}else if(i===8)pickSite(4);
